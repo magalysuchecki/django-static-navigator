@@ -1,0 +1,47 @@
+{
+  "name": "django-static-navigator",
+  "displayName": "Django Static Navigator",
+  "description": "Permite navegación directa en rutas estáticas de Django con Ctrl+clic.",
+  "version": "0.1.0",
+  "publisher": "magalysuchecki",
+  "engines": {
+    "vscode": "^1.96.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:django-html"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "django-html",
+        "aliases": [
+          "Django HTML"
+        ],
+        "extensions": [
+          ".html"
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^16.x",
+    "@types/vscode": "^1.96.0",
+    "typescript": "^4.9.5",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tu-usuario/tu-repositorio.git"
+  }
+}
