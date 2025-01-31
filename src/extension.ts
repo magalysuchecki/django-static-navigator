@@ -2,15 +2,17 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 
 export function activate(context: vscode.ExtensionContext) {
+
 	// Registramos un proveedor de definición para plantillas Django
-	const definitionProvider = vscode.languages.registerDefinitionProvider(
+	const djangoHtmlDefinitionProvider = vscode.languages.registerDefinitionProvider(
+
 		{ scheme: 'file', language: 'django-html' }, // Solo aplica a plantillas Django
 		{
 			provideDefinition(document, position, token) {
-				// Busca la ruta entre comillas en {% static "..." %}
+				const config = vscode.workspace.getConfiguration();
 				const range =
 					document.getWordRangeAtPosition(position, /{% static "([^"]+)" %}/) ||
-					document.getWordRangeAtPosition(position, /{% static '([^']+)' %}/);
+					document.getWordRangeAtPosition(position, /{% static '([^']+)' %}/)
 
 				if (!range) {
 					return null;
@@ -27,7 +29,7 @@ export function activate(context: vscode.ExtensionContext) {
 				if (!workspaceFolders) {
 					return null;
 				}
-				const config = vscode.workspace.getConfiguration();
+
 				const staticDirRelative = String(config.get('django-static-navigator.staticDir'));
 				const staticDir = path.join(workspaceFolders[0].uri.fsPath, staticDirRelative);
 				const filePath = path.join(staticDir, relativePath);
@@ -36,7 +38,44 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	);
 
-	context.subscriptions.push(definitionProvider);
+	// Registramos un proveedor de definición para archivos Python
+	const pythonDefinitionProvider = vscode.languages.registerDefinitionProvider(
+		{ scheme: 'file', language: 'python' }, // Solo aplica a archivos Python
+		{
+			provideDefinition(document, position, token) {
+				const config = vscode.workspace.getConfiguration();
+				let fileExts: string[] = config.get('django-static-navigator.filesExtensions') || [];
+				const fileExtsPattern = fileExts.join("|");
+				const regexDoubleQuotes = new RegExp(`"[^"]+\\.(${fileExtsPattern})"`);
+				const regexSingleQuotes = new RegExp(`'[^']+\\.(${fileExtsPattern})'`);
+
+				const range =
+					document.getWordRangeAtPosition(position, regexDoubleQuotes) ||
+					document.getWordRangeAtPosition(position, regexSingleQuotes);
+				if (!range) {
+					return null;
+				}
+				const match =
+					document.getText(range).match(/"([^"]+)"/) ||
+					document.getText(range).match(/'([^']+)'/);
+				if (!match) {
+					return null;
+				}
+				const relativePath = match[1]; // Ruta extraída de la función static()
+				const workspaceFolders = vscode.workspace.workspaceFolders;
+
+				if (!workspaceFolders) {
+					return null;
+				}
+
+				const staticDirRelative = String(config.get('django-static-navigator.staticDir'));
+				const staticDir = path.join(workspaceFolders[0].uri.fsPath, staticDirRelative);
+				const filePath = path.join(staticDir, relativePath);
+				return new vscode.Location(vscode.Uri.file(filePath), new vscode.Position(0, 0));
+			}
+		}
+	);
+	context.subscriptions.push(djangoHtmlDefinitionProvider, pythonDefinitionProvider);
 }
 
 export function deactivate() { }

@@ -1,7 +1,7 @@
 {
   "name": "django-static-navigator",
   "displayName": "Django Static Navigator",
-  "description": "Extensión para VSCode. Permite navegación directa en rutas estáticas de Django con ctrl+clic.",
+  "description": "Extensión para VSCode. Permite navegación directa de archivos estáticos desde plantillas o vistas de Django con ctrl+clic.",
   "version": "0.1.5",
   "publisher": "magalysuchecki",
   "icon": "assets/django-static-navigator-logo.png",
@@ -12,7 +12,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onLanguage:django-html"
+    "onLanguage:django-html",
+    "onLanguage:python"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -25,6 +26,15 @@
         "extensions": [
           ".html"
         ]
+      },
+      {
+        "id": "py",
+        "aliases": [
+          "Python"
+        ],
+        "extensions": [
+          ".py"
+        ]
       }
     ],
     "configuration": {
@@ -35,6 +45,14 @@
           "type": "string",
           "default": "public\\static",
           "description": "Ruta de los archivos estáticos del proyecto."
+        },
+        "django-static-navigator.filesExtensions": {
+          "type": "array",
+          "default": [
+            "js",
+            "css"
+          ],
+          "description": "Extensiones de archivos estáticos."
         }
       }
     }
