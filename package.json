@@ -13,38 +13,36 @@
   ],
   "activationEvents": [
     "onLanguage:django-html",
+    "onLanguage:html",
     "onLanguage:python"
   ],
   "main": "./out/extension.js",
   "contributes": {
-    "languages": [
-      {
-        "id": "django-html",
-        "aliases": [
-          "Django HTML"
-        ],
-        "extensions": [
-          ".html"
-        ]
-      },
-      {
-        "id": "py",
-        "aliases": [
-          "Python"
-        ],
-        "extensions": [
-          ".py"
-        ]
-      }
-    ],
     "configuration": {
       "type": "object",
       "title": "Configuración de Django Static Navigator",
       "properties": {
+        "django-static-navigator.staticDirs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "static",
+            "public/static"
+          ],
+          "markdownDescription": "Carpetas de estáticos relativas a la raíz del proyecto, en orden de prioridad (equivalente a `STATICFILES_DIRS`)."
+        },
+        "django-static-navigator.searchAppStatic": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Si el archivo no está en `staticDirs`, buscarlo en cualquier carpeta `static/` del proyecto (estáticos de cada app)."
+        },
         "django-static-navigator.staticDir": {
           "type": "string",
-          "default": "public\\static",
-          "description": "Ruta de los archivos estáticos del proyecto."
+          "default": "",
+          "markdownDeprecationMessage": "Usar `django-static-navigator.staticDirs`. Si se completa, se agrega a esa lista.",
+          "description": "Ruta de los archivos estáticos del proyecto (obsoleto)."
         },
         "django-static-navigator.filesExtensions": {
           "type": "array",
@@ -59,16 +57,14 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc --watch"
+    "compile": "node -e \"require('fs').rmSync('out',{recursive:true,force:true})\" && tsc -p ./",
+    "watch": "tsc --watch",
+    "test": "npm run compile && node --test \"out/test/**/*.test.js\""
   },
   "devDependencies": {
-    "@types/jest": "^29.5.14",
-    "@types/node": "^16.x",
+    "@types/node": "^20.19.43",
     "@types/vscode": "^1.96.0",
-    "typescript": "^4.9.5",
-    "webpack": "^5.97.1",
-    "webpack-cli": "^6.0.1"
+    "typescript": "^4.9.5"
   },
   "repository": {
     "type": "git",
