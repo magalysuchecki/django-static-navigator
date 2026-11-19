@@ -4,7 +4,7 @@ All notable changes to the "django-static-navigator" extension will be documente
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [Unreleased]
+## [0.1.7] - 17/11/2026
 
 - Ya no redefine los lenguajes de `.html` y `.py`, que podían interferir con otras extensiones.
 - También funciona en archivos `.html` con el lenguaje HTML común.

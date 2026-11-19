@@ -2,7 +2,7 @@
   "name": "django-static-navigator",
   "displayName": "Django Static Navigator",
   "description": "Extensión para VSCode. Permite navegación directa de archivos estáticos desde plantillas o vistas de Django con ctrl+clic.",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "publisher": "magalysuchecki",
   "icon": "assets/django-static-navigator-logo.png",
   "engines": {
